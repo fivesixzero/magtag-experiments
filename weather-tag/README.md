@@ -2,6 +2,8 @@
 
 Simple MagTag weather fetcher
 
+<img width=600 src="./weather-tag.jpg">
+
 ## Overview
 
 This uses the US National Weather Service API to retrieve basic forecast data and displays it on the MagTag.
