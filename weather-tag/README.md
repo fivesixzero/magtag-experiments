@@ -2,7 +2,7 @@
 
 Simple MagTag weather fetcher
 
-<img width=600 src="./weather-tag.jpg">
+<img width=400 src="./weather-tag.jpg">
 
 ## Overview
 
