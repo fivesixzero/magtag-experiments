@@ -23,3 +23,9 @@ This uses the US National Weather Service API to retrieve basic forecast data an
   * See https://weather-gov.github.io/api/gridpoints for more info on how to find the gridpoint for your location.
 5. Copy `code.py` and `secrets.py` to MagTag
 6. Watch the magic happen :)
+
+## Notes
+
+### MagTag Library Issues
+
+The MagTag library, like the PyPortal library, only does its own internal JSON parsing if it receives a `content-type` of `application/json` from the endpoint. This NWS endpoint returns `application/geo+json`, which means the MagTag lib skips past all of its JSON path harvesting magic, so we can't rely on the libary's fancy features for request parsing.
