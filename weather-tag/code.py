@@ -11,15 +11,12 @@ WX_URL_ENDPOINT = '/gridpoints/{}/{}/forecast'
 wx_url = WX_URL_BASE + WX_URL_ENDPOINT.format(secrets['nws_wfo'], secrets['nws_gridpoint'])
 print("WX URL:", wx_url)
 
-magtag = MagTag(url=wx_url)
+magtag = MagTag()
 print("MagTag IP address is", magtag.network._wifi.ip_address)
 
 magtag.add_text(
     text_font=terminalio.FONT,
-    text_position=(
-        3,
-        (magtag.graphics.display.height // 2) - 1,
-    ),
+    text_position=(3,(magtag.graphics.display.height // 2) - 1,),
     text_scale=1,
     line_spacing=1.1
 )
@@ -43,13 +40,13 @@ def get_wx_text(response_string):
 
     for wx_line in wx:
         wx_text += '\n'
-        wx_text += '{:15} {:3}f {}'.format(wx_line['name'], wx_line['temperature'], wx_line['shortForecast'])
+        wx_text += '{:16} {:3}f {}'.format(wx_line['name'], wx_line['temperature'], wx_line['shortForecast'])
     
     return wx_text
 
 def retrieve_wx_data():
     print("Retrieving forecast from NWS API for wfo: {}, gridpoint: {}".format(secrets['nws_wfo'], secrets['nws_gridpoint']))
-    response_string = magtag.fetch()
+    response_string = magtag.network.fetch_data(wx_url)
     print("NWS API call complete")
 
     wx_text = get_wx_text(response_string)
