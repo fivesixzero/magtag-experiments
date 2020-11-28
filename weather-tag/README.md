@@ -31,3 +31,5 @@ This uses the US National Weather Service API to retrieve basic forecast data an
 ### MagTag Library Issues
 
 The MagTag library, like the PyPortal library, only does its own internal JSON parsing if it receives a `content-type` of `application/json` from the endpoint. This NWS endpoint returns `application/geo+json`, which means the MagTag lib skips past all of its JSON path harvesting magic, so we can't rely on the libary's fancy features for request parsing.
+
+I've opened [an issue](https://github.com/adafruit/Adafruit_CircuitPython_MagTag/issues/28) to see if this can be addressed in the MagTab lib though, so if this changes it'll be fun to rewrite this code to be a lot simpler by using the `json_path` features available in there.
