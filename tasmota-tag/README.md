@@ -50,7 +50,7 @@ For the MQTT broker I'm just using a basic local server via the [Mosquitto Docke
 
 ## Ref Links
 
-<https://tasmota.github.io/docs/MQTT/>
-<https://tasmota.github.io/docs/Lights/>
-<https://learn.adafruit.com/mqtt-in-circuitpython/code-walkthrough>
-<https://learn.adafruit.com/mqtt-in-circuitpython/advanced-minimqtt-usage>
+* <https://tasmota.github.io/docs/MQTT/>
+* <https://tasmota.github.io/docs/Lights/>
+* <https://learn.adafruit.com/mqtt-in-circuitpython/code-walkthrough>
+* <https://learn.adafruit.com/mqtt-in-circuitpython/advanced-minimqtt-usage>
