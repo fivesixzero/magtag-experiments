@@ -100,10 +100,10 @@ pool = socketpool.SocketPool(wifi.radio)
 mqtt_client = MQTT.MQTT(
     broker=secrets["mqtt_broker"],
     port=secrets["mqtt_port"],
-    username="test",
-    password="test",
+    username=secrets["mqtt_user"],
+    password=secrets["mqtt_password"],
     socket_pool=pool,
-    client_id="circuitpy-tasmota",
+    client_id=secrets["mqtt_client_id"],
     ssl_context=ssl.create_default_context()
 )
 
@@ -116,10 +116,7 @@ mqtt_client.connect()
 
 ## Tasmota Device Control
 ### Define Bulb Names
-bulbnames = [
-    "tasmota_bulb1",
-    "tasmota_bulb2"
-]
+bulbnames = secrets['bulbs']
 
 ### Define Topics for Bulbs
 wild_tele = "tele/{}/+"
@@ -365,7 +362,7 @@ while True:
                     device_indicators[bulbname].fill = None
                 ## Set indicator for bulb dimming
                 device_bars[bulbname].value = int(bulbs[bulbname].dimmer)
-            time_label.text = str(battery_status())
+            status_right.text = str(battery_status())
             display_refresh()
 
     time.sleep(0.01)
