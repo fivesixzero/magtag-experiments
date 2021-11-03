@@ -22,7 +22,7 @@ This uses an MQTT broker to control Tasmota LED bulbs.
 3. Edit `secrets.py` in main directory with `ssid` and `password` for your wireless network
 4. Edit `secrets.py` to include the IP, port, username, password and client ID to use for your MQTT broker
 5. Edit the `bulbs` list in `secrets.py` to contain the "names" (`topic` in Tasmota config parlance) for the bulbs you'd like to control
-5. Copy `code.py` and `secrets.py` to the MagTag
+5. Copy `code.py`, `bulb.py`, and `secrets.py` to the MagTag
 6. Control those lightbulbs!
 
 ### Controls
