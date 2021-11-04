@@ -6,6 +6,7 @@ import time
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
 import neopixel
 from digitalio import DigitalInOut, Direction, Pull
+import keypad
 from analogio import AnalogIn
 import json
 import re
@@ -19,27 +20,25 @@ from bulb import Bulb
 
 ## Buttons (GPIO15, GPIO14, GPIO12, GPIO11)
 
-buttons = []
-for pin in (board.BUTTON_A, board.BUTTON_B, board.BUTTON_C, board.BUTTON_D):
-    switch = DigitalInOut(pin)
-    switch.direction = Direction.INPUT
-    switch.pull = Pull.UP
-    buttons.append(switch)
+button_pins = (
+    board.BUTTON_A,
+    board.BUTTON_B,
+    board.BUTTON_C,
+    board.BUTTON_D
+)
 
-def button_a_pressed():
-    return not buttons[0].value
+buttons = keypad.Keys(button_pins, value_when_pressed=False, pull=True)
 
-def button_b_pressed():
-    return not buttons[1].value
-
-def button_c_pressed():
-    return not buttons[2].value
-
-def button_d_pressed():
-    return not buttons[3].value
-
-def any_button_pressed():
-    return False in [buttons[i].value for i in range(0, 4)]
+def retrieve_key_events(keys: keypad.Keys):
+    new_events = True
+    key_events = []
+    while new_events:
+        event = keys.events.get()
+        if event:
+            key_events.append(event)
+        else:
+            new_events = False
+    return key_events
 
 ## Battery Management/Voltage Monitor (ADC1 CH8/GPIO9)
 
@@ -301,6 +300,28 @@ while True:
         wifi.reset()
         mqtt_client.reconnect()
         continue
+
+    should_change_anything = False
+    should_toggle = False
+    should_turn_on = False
+    should_turn_off = False
+    should_just_refresh_display = False
+    new_key_events = retrieve_key_events(buttons)
+    if len(new_key_events) > 0:
+        print("new key events: {}".format(len(new_key_events)))
+        for e in new_key_events:
+            print("event: {}".format(e))
+            if e.pressed and not should_change_anything:
+                if e.key_number is 0:
+                    should_toggle = True
+                elif e.key_number is 1:
+                    should_just_refresh_display = True
+                elif e.key_number is 2:
+                    should_turn_on = True
+                elif e.key_number is 3:
+                    should_turn_off = True
+        should_change_anything = True
+        print("events handled: toggle: {}, turn_on: {}, turn_off: {}, just_refresh: {}".format(should_toggle, should_turn_on, should_turn_off, should_just_refresh_display))
     
     # print("timer: {}".format(button_timer))
     if button_timer > 0:
@@ -309,23 +330,23 @@ while True:
             print("Buttons: Ready for next button input")
             neopixels[0] = (0,0,0)
     else:
-        if any_button_pressed():
-            if button_a_pressed():
+        if should_change_anything:
+            if should_toggle:
                 for bulbname in bulbnames:
                     new_dimmer = int(bulbs[bulbname].dimmer) - 25
                     if new_dimmer <= 10:
                         new_dimmer = 10
                     mqtt_client.publish(cmnd_power.format(bulbname), 'TOGGLE')
-                    time.sleep(0.2)
-                    mqtt_client.loop(1)
-                time.sleep(0.2)
-                mqtt_client.loop(1)
+                    mqtt_client.loop(0.1)
+                mqtt_client.loop(0.1)
+                time.sleep(0.1)
+                mqtt_client.loop(0.1)
                 button_timer = 8
-            if button_b_pressed():
+            if should_just_refresh_display:
                 print("Battery Status: {}".format(battery_status()))
                 mqtt_client.loop(1)
                 button_timer = 3
-            if button_c_pressed():
+            if should_turn_on:
                 mqtt_client.loop(1)
                 for bulbname in bulbnames:
                     new_dimmer = int(bulbs[bulbname].dimmer) - 25
@@ -337,7 +358,7 @@ while True:
                 time.sleep(0.2)
                 mqtt_client.loop(1)
                 button_timer = 5
-            if button_d_pressed():
+            if should_turn_off:
                 mqtt_client.loop(1)
                 for bulbname in bulbnames:
                     new_dimmer = int(bulbs[bulbname].dimmer) + 25
@@ -350,8 +371,6 @@ while True:
                 mqtt_client.loop(1)
                 button_timer = 5
             neopixels[0] = (255,0,0)
-            time.sleep(1)
-            mqtt_client.loop(0.5)
             time.sleep(1)
             mqtt_client.loop(0.5)
             for bulbname in bulbnames:
