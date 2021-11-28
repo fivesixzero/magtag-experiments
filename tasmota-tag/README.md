@@ -1,3 +1,11 @@
+**THIS REPO IS ARCHIVAL**
+
+_In late 2021 I moved all of my CircuitPython experiments to repo with a broader mandate, [`circuitpython-experiments`](https://github.com/fivesixzero/circuitpython-experiments/)._
+
+_The latest version of this code can be found under that repo's `tasmota-tag` directory:_ 
+
+_<https://github.com/fivesixzero/circuitpython-experiments/tree/main/magtag-esp32-s2/tasmota-tag>_
+
 # tasmota-tag
 
 Simple MagTag Tasmota bulb controller
