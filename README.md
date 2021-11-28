@@ -1,3 +1,7 @@
+**THIS REPO IS ARCHIVAL**
+
+_In late 2021 I moved all of my CircuitPython experiments to repo with a broader mandate, [`circuitpython-experiments`](https://github.com/fivesixzero/circuitpython-experiments/)._
+
 # magtag-experiments
 
 Experiments with Adafruit's excellent and super-fun MagTag device
